@@ -1,66 +1,63 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Klima Uređaji Hrvatska - Laravel E-Commerce Platforma
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Funkcionalna webshop aplikacija izgrađena korištenjem **Laravel**, **Livewire** i **Tailwind CSS** tehnologija, refaktorirana i optimizirana s fokusom na profesionalne arhitektonske prakse, reaktivne košarice i čist kod.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Ključne Značajke
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* **Interaktivni Katalog i Filteri:** Dinamički katalog proizvoda s naprednim filtriranjem u stvarnom vremenu (raspon cijena, brendovi, rashladni učinak, energetski razredi, oznake za akcije i best-buy ponude).
+* **Reaktivna Košarica (Livewire):** Besprijekorno iskustvo kupovine s mini-košaricom, automatskim ažuriranjem količina i izračunima temeljenim na višekratno iskoristivim traitovima (`Traits`).
+* **Sloj Narudžbi i Servisi (`OrderService`):** Izdvojena poslovna logika narudžbi koja upravlja transakcijama baze podataka, zbrojevima i slanjem e-mail obavijesti.
+* **Sustav E-mail Obavijesti:** Automatsko slanje HTML potvrda kupcima i administratorima prilikom kreiranja narudžbi i slanja upita putem kontakt forme.
+* **Promocije i Odbrojavanje:** Dinamičko odbrojavanje vremena do isteka akcije za snižene proizvode uz pomoć Vanilla JS-a.
+* **Responzivan Dizajn:** Potpuno prilagođeno sučelje za mobilne uređaje i desktop, dizajnirano pomoću Tailwind CSS-a.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🛠️ Tehnološki Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Okvir (Framework):** Laravel 10 / 11
+* **Sučelje / Frontend:** Blade predlošci, Tailwind CSS (kroz Vite), Livewire 3
+* **Baza Podataka:** MySQL
+* **Arhitektonski uzorci:**
+  * **Service Layer:** `OrderService` za izmicanje logike iz kontrolera.
+  * **Traits:** `CalculatesCart` za zajedničku logiku izračuna u košarici.
+  * **Seeders:** Prilagođeni JSON i baze seedera (`KlimaUredajiSeeder`, `PromoProductsSeeder`) za brzu i pouzdanu inicijalizaciju podataka.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🔧 Upute za Instalaciju i Pokretanje
 
-## Laravel Sponsors
+Slijedite ove korake kako biste pokrenuli projekt lokalno na svom računalu:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+1. Klonirajte repozitorij:
+    git clone [https://github.com/lionwhyte/klima-uredaji-hrvatska.git](https://github.com/lionwhyte/klima-uredaji-hrvatska.git)
+    cd klima-uredaji-hrvatska
 
-### Premium Partners
+2. Instalirajte PHP i Node ovisnosti:
+    composer install
+    npm install
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+3. Konfigurirajte okruženje:
+    # Kopirajte .env.example datoteku u .env i generirajte ključ aplikacije
+    cp .env.example .env
+    php artisan key:generate
+    # Uredite podatke za spajanje na bazu podataka u vašoj .env datoteci
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=klima_uredaji_db
+    DB_USERNAME=root
+    DB_PASSWORD=
 
-## Contributing
+4. Pokrenite migracije i napunite bazu podacima:
+    # Pokrenite migracije i sve seedere (uključujući proizvode i promo artikle)
+    php artisan migrate:fresh --seed
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. Pokrenite poslužitelj:
+    # Pokretanje Vite servera za CSS/JS
+    npm run dev
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    # Pokretanje Laravel servera
+    php artisan serve

@@ -10,7 +10,6 @@ class BestBuy extends Model
     use HasFactory;
     protected $fillable = [
         'klima_uredaj_id',
-        // Add other fields as needed
     ];
 
     public function klimaUredaj()

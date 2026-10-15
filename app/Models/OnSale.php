@@ -12,7 +12,6 @@ class OnSale extends Model
         'klima_uredaj_id',
         'time_till_sale',
         'discount',
-        // Add other fields as needed
     ];
 
     public function klimaUredaj()

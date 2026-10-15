@@ -11,7 +11,7 @@ class BestBuyProducts extends Component
 
     public function mount()
     {
-        // Retrieve random on-sale products (adjust the query as needed)
+        // Retrieve random best-buy products (adjust the query as needed)
         $this->products = KlimaUredaj::whereHas('bestBuy')
             ->inRandomOrder()
             ->limit(6)

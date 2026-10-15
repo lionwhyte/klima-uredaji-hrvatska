@@ -6,10 +6,13 @@ var thumbElements = document.querySelectorAll('.thumb');
 thumbElements.forEach(function (element, index) {
     const carousel = document.getElementById("carousel");
     element.addEventListener('click', function () {
+        
         if(!element.classList.contains("border-gray-500")){
             // Your click event handling logic here
             carousel.classList.remove(carousel.classList[carousel.classList.length - 1])
-            carousel.classList.add(`translate-x-[-${index * 100}%]`)
+            carousel.classList.add(`translate-${index * 100}`)
+            // carousel.classList.add(`translate-x-[-${index * 100}%]`)
+            // carousel.style.transform = `translateX(-${index * 100}%)`
 
             thumbElements.forEach(function (el) {
                 el.classList.remove("border-gray-500")
@@ -110,23 +113,6 @@ function showTab(tabId) {
         document.getElementById(tabId + 'Button').classList.add('border-b-4', 'border-sky-500');
     }  
 }
-
-
-
-//SCROLL OVER ANIMATION
-// document.addEventListener('scroll', function() {
-//     const container = document.getElementById('container');
-//     const animateMe = document.getElementById('animateMe');
-
-//     // Check if the element is in view
-//     const isInView = container.getBoundingClientRect().top <= window.innerHeight && container.getBoundingClientRect().bottom >= 0;
-
-//     // Trigger the animation only if the element is in view and not already animated
-//     if (isInView && !animateMe.classList.contains('animated')) {
-//         animateMe.classList.remove('opacity-0', 'translate-y-10');
-//         animateMe.classList.add('opacity-100', 'translate-y-0', 'transition', 'duration-[2000ms]', 'animated');
-//     }
-// });
 
 
 

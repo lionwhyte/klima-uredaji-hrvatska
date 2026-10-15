@@ -47,11 +47,8 @@ class AddToCart extends Component
                 }
 
                 // Reset the quantity after adding to the cart
-                //$this->productId = 1;
                 $this->emit('productCartUpdated');
 
-                // Optionally, you can return a response to the client-side JavaScript
-                // return response()->json(['message' => 'Product added to cart successfully']);
             } catch (\Exception $e) {
                 // Handle the exception (e.g., log it, show an error message)
                 $this->addError('quantity', 'Failed to add the product to the cart.');

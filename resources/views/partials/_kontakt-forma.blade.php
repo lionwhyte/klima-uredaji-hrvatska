@@ -10,7 +10,7 @@
     </div> 
 @endif
 
-<form action="{{ route('contact.submit') }}" method="post" class="flex flex-col my-4">
+<form action="{{ route('kontakt.submit') }}" method="post" class="flex flex-col my-4">
     @csrf
     <label for="name">Vaše ime (obavezno)</label>
     <input class="mb-4 px-1 py-2 text-slate-300 bg-slate-600 rounded" type="text" id="name" name="name" value="{{old('name')}}">

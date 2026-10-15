@@ -34,8 +34,8 @@ class BuyerOrderConfirmation extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: new Address('toni.technoprom@gmail.com', 'Klima uređaji Hrvatska'),
-            subject: 'Nrudžba zaprimljena',
+            from: new Address('info@klimatizacija-webshop.test', 'Klima Webshop'),
+            subject: 'Potvrda narudžbe zaprimljena',
         );
     }
 

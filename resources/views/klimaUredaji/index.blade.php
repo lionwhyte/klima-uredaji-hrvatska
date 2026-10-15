@@ -63,7 +63,7 @@
             </label>
             <label class="self-center text-gray-500 hover:text-gray-600 font-semibold cursor-pointer">
                 <input type="checkbox" id="bestBuyCheckbox" name="bestBuyCheckbox" onchange="filterBestBuys()" 
-                {{isset($selectedBestBuy) ? $selectedBestBuy === '1' ? 'checked' : '' : ''}}> Najeftinije iz ponude
+                {{isset($selectedBestBuy) ? $selectedBestBuy === '1' ? 'checked' : '' : ''}}> Najprodavanije
             </label>
         </div>
         

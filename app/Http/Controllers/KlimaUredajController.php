@@ -7,98 +7,90 @@ use Illuminate\Http\Request;
 
 class KlimaUredajController extends Controller
 {
-    //LANDING PAGE
+    // LANDING PAGE / SHOP INDEX
     public function index(Request $request)
-    {   
-        // Default order by 'naslov' (alphabetical order)
+    {
         $orderBy = $request->get('order') === 'latest' ? 'created_at' : 'naslov';
-
-        // Fetch data from the database based on the order
         $klimaUredaji = KlimaUredaj::orderBy($orderBy)->paginate(10);
 
-        return view('klimaUredaji.index', ['klimaUredaji' => $klimaUredaji]);
+        return view('klimaUredaji.index', compact('klimaUredaji'));
     }
 
-    //SINGLE PRODUCT
+    // SINGLE PRODUCT
     public function show($slug)
     {
         $klimaUredaj = KlimaUredaj::where('slug', $slug)->firstOrFail();
 
-        // Get related products based on ucinak_hladenja_kw
         $relatedProducts = KlimaUredaj::where('ucinak_hladenja_kw', '=', $klimaUredaj->ucinak_hladenja_kw)
-        ->inRandomOrder()
-        ->limit(8) // Adjust the limit as needed
-        ->get();
+            ->where('id', '!=', $klimaUredaj->id) // Izbjegavamo prikaz istog proizvoda
+            ->inRandomOrder()
+            ->limit(8)
+            ->get();
 
         return view('klimaUredaji.show', compact('klimaUredaj', 'relatedProducts'));
     }
 
-
-    //SEARCH PRODUCTS
+    // SEARCH & FILTER PRODUCTS
     public function search(Request $request)
     {
-        // Handle other filters
-        // dd($request->input('onSale'));
-        
-        $selectedBrand = $request->input('brend');
-        $selectedPower = $request->input('snaga');
-        $selectedMinPrice = $request->input('min-cijena');
-        $selectedMaxPrice = $request->input('max-cijena');
-        $selectedArea = $request->input('prostor');
-        $selectedEnergyLabel = $request->input('energetska-klasa');
-        $selectedOnSale = $request->input('onSale');
-        $selectedBestBuy = $request->input('bestBuy');
+        $filters = [
+            'brend' => $request->input('brend'),
+            'snaga' => $request->input('snaga'),
+            'prostor' => $request->input('prostor'),
+            'energetska-klasa' => $request->input('energetska-klasa'),
+            'onSale' => $request->input('onSale'),
+            'bestBuy' => $request->input('bestBuy'),
+        ];
 
-        function parsePrice($price)
-        {
-            $price = explode("-", $price);
-            $selectedMinPrice = $price[0];
-            $selectedMaxPrice = $price[1];
-    
-            return compact('selectedMinPrice', 'selectedMaxPrice');
-        }
-    
-        if ($request->filled('cijena')) {
-            extract(parsePrice($request->input('cijena')));
-        }
+        $priceRange = $this->parsePrice($request->input('cijena'));
+        $selectedMinPrice = $request->input('min-cijena', $priceRange['selectedMinPrice']);
+        $selectedMaxPrice = $request->input('max-cijena', $priceRange['selectedMaxPrice']);
 
-        $klimaUredajiQuery  = KlimaUredaj::when($selectedBrand, function ($query) use ($selectedBrand) {
-            return $query->where('brend', '=', $selectedBrand);
-        })->when($selectedPower, function ($query) use ($selectedPower) {
-            return $query->where('snaga_kw', '=', $selectedPower);
-        })->when($selectedMinPrice, function ($query) use ($selectedMinPrice) {
-            return $query->where('cijena', '>=', $selectedMinPrice);
-        })->when($selectedMaxPrice, function ($query) use ($selectedMaxPrice) {
-            return $query->where('cijena', '<=', $selectedMaxPrice);
-        })->when($selectedArea, function ($query) use ($selectedArea) {
-            return $query->where('prostor_m2', '=', $selectedArea);
-        })->when($selectedEnergyLabel, function ($query) use ($selectedEnergyLabel) {
-            return $query->where('energetski_razred_hladenja', '=', $selectedEnergyLabel);
-        });
+        $klimaUredajiQuery = KlimaUredaj::query()
+            ->when($filters['brend'], fn($q, $val) => $q->where('brend', $val))
+            ->when($filters['snaga'], fn($q, $val) => $q->where('snaga_kw', $val))
+            ->when($selectedMinPrice, fn($q, $val) => $q->where('cijena', '>=', $val))
+            ->when($selectedMaxPrice, fn($q, $val) => $q->where('cijena', '<=', $val))
+            ->when($filters['prostor'], fn($q, $val) => $q->where('prostor_m2', $val))
+            ->when($filters['energetska-klasa'], fn($q, $val) => $q->where('energetski_razred_hladenja', $val));
 
-        // Add the condition for 'onSale' or 'bestBuy' if it is selected
-        if ($selectedOnSale && $selectedBestBuy){
+        // Upravljanje akcijskim i best-buy statusima
+        if ($filters['onSale'] && $filters['bestBuy']) {
             $klimaUredajiQuery->has('onSale')->has('bestBuy');
-        } elseif($selectedOnSale){
+        } elseif ($filters['onSale']) {
             $klimaUredajiQuery->has('onSale');
-        } elseif($selectedBestBuy){
+        } elseif ($filters['bestBuy']) {
             $klimaUredajiQuery->has('bestBuy');
         }
 
-        // Paginate the results
         $klimaUredaji = $klimaUredajiQuery->paginate(10);
 
-        // Pass the results and selected filters to the view
-        return view('klimaUredaji.index', 
-        compact('klimaUredaji', 'selectedBrand', 'selectedPower', 'selectedMinPrice', 'selectedMaxPrice', 'selectedArea', 'selectedEnergyLabel', 'selectedOnSale', 'selectedBestBuy'))
-        ->with('selectedBrand', $selectedBrand)
-        ->with('selectedPower', $selectedPower)
-        ->with('selectedMinPrice', $selectedMinPrice)
-        ->with('selectedMaxPrice', $selectedMaxPrice)
-        ->with('selectedArea', $selectedArea)   
-        ->with('selectedEnergyLabel', $selectedEnergyLabel)
-        ->with('selectedOnSale', $selectedOnSale)
-        ->with('selectedBestBuy', $selectedBestBuy);
+        // Pakiramo sve filtere u view za očuvanje stanja forme
+        return view('klimaUredaji.index', array_merge(
+            compact('klimaUredaji', 'selectedMinPrice', 'selectedMaxPrice'),
+            [
+                'selectedBrand' => $filters['brend'],
+                'selectedPower' => $filters['snaga'],
+                'selectedArea' => $filters['prostor'],
+                'selectedEnergyLabel' => $filters['energetska-klasa'],
+                'selectedOnSale' => $filters['onSale'],
+                'selectedBestBuy' => $filters['bestBuy'],
+            ]
+        ));
     }
-    
+
+    // Privatna pomoćna metoda umjesto funkcije unutar metode
+    private function parsePrice(?string $price): array
+    {
+        if (!$price) {
+            return ['selectedMinPrice' => null, 'selectedMaxPrice' => null];
+        }
+
+        $parts = explode("-", $price);
+
+        return [
+            'selectedMinPrice' => $parts[0] ?? null,
+            'selectedMaxPrice' => $parts[1] ?? null,
+        ];
+    }
 }

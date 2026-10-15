@@ -6,24 +6,16 @@
             <a class="pb-3" href="/klima-uredaji">KLIMA UREĐAJI SHOP</a>
         </li>
         <li
-            class="pb-2 {{ request()->is('akcije') ? 'text-indigo-700  border-b-4 rounded-b border-indigo-700' : 'hover:text-indigo-700 transition duration-150' }}">
-            <a class="pb-3" href="/akcije">AKCIJA KLIMA UREĐAJI</a>
+            class="pb-2">
+            <a class="pb-3" href="#">LINK 1</a>
         </li>
         <li
-            class="pb-2 {{ request()->is('best-buy-klima-uredaji') ? 'text-indigo-700  border-b-4 rounded-b border-indigo-700' : 'hover:text-indigo-700 transition duration-150' }}">
-            <a class="pb-3" href="/best-buy-klima-uredaji">NAJJEFTINIJI KLIMA UREĐAJI</a>
+            class="pb-2">
+            <a class="pb-3" href="#">LINK 2</a>
         </li>
         <li
-            class="pb-2 {{ request()->is('montaza-klima-uredaja') ? 'text-indigo-700  border-b-4 rounded-b border-indigo-700' : 'hover:text-indigo-700 transition duration-150' }}">
-            <a class="pb-3" href="/montaza-klima-uredaja">MONTAŽA KLIMA UREĐAJA</a>
-        </li>
-        <li
-            class="pb-2 {{ request()->is('servis-klima-uredaja') ? 'text-indigo-700  border-b-4 rounded-b border-indigo-700' : 'hover:text-indigo-700 transition duration-150' }}">
-            <a class="pb-3" href="/servis-klima-uredaja">SERVIS KLIMA UREĐAJA</a>
-        </li>
-        <li
-            class="pb-2 {{ request()->is('blog/dizalica-topline') ? 'text-indigo-700  border-b-4 rounded-b border-indigo-700' : 'hover:text-indigo-700 transition duration-150' }}">
-            <a class="pb-3" href="/blog/dizalica-topline">DIZALICE TOPLINE</a>
+            class="pb-2 ">
+            <a class="pb-3" href="#">LINK 3</a>
         </li>
     </ul>
 </nav>

@@ -15,7 +15,7 @@ class KlimaUredajiSeeder extends Seeder
      */
     public function run()
     {
-        $json = file_get_contents(storage_path('klima_uređaji_podaci.json'));
+        $json = file_get_contents(storage_path('app/klima_uređaji_podaci.json'));
         $data = json_decode($json, true);
 
         foreach ($data as $item) {

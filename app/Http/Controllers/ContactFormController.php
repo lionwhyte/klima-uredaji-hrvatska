@@ -54,7 +54,7 @@ class ContactFormController extends Controller
         $validatedData['path'] = $previousPath;
 
         // Send email to the seller
-        Mail::to('toni.technoprom@gmail.com')->send(new ContactFormSubmitted($validatedData));
+        Mail::to(config('mail.from.address'))->send(new ContactFormSubmitted($validatedData));
 
         // Send an automatic response to the user
         Mail::to($request->input('email'))->send(new ContactFormUserResponse($validatedData));

@@ -33,20 +33,10 @@ class ContactFormSubmitted extends Mailable
      */
     public function envelope()
     {
-        $subject = "Zatražen upit za Kompletan cjenik klima - Vedran Company";
-
-        if($this->data["path"] === "/kompletan-cjenik-klima-25kw-za-prostore-od-7-25-m2"){
-            $subject = "Zatražen upit za Kompletan cjenik klima 2,5kw - Vedran Company";
-        } elseif($this->data["path"] === "/kompletan-cjenik-klima-35kw-za-prostore-od-25-40-m2"){
-            $subject = "Zatražen upit za Kompletan cjenik klima 3,5kw - Vedran Company";
-        } elseif($this->data["path"] === "/kompletan-cjenik-klima-5kw-za-prostore-od-40-60-m2"){
-            $subject = "Zatražen upit za Kompletan cjenik klima 5kw - Vedran Company";
-        } elseif($this->data["path"] === "/kompletan-cjenik-klima-7kw-za-prostore-od-60-90-m2"){
-            $subject = "Zatražen upit za Kompletan cjenik klima 7kw - Vedran Company";
-        }
+        $subject = "Zatražen upit za kompletan cjenik klima - Klima Webshop";
 
         return new Envelope(
-            from: new Address('toni.technoprom@gmail.com', 'Klima uređaji Hrvatska'),
+            from: new Address('info@klimatizacija-webshop.test', 'Klima Webshop'),
             subject: $subject,
             
         );

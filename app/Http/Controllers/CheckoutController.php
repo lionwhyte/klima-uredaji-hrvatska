@@ -1,22 +1,19 @@
 <?php
-
 namespace App\Http\Controllers;
-
-
-use Illuminate\Support\Facades\Validator;
-use App\Models\Order;
-use App\Models\OrderItem;
 use Illuminate\Http\Request;
-use App\Models\Cart as CartModel;
+use App\Services\OrderService;
+use App\Models\Order;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BuyerOrderConfirmation;
 use App\Mail\SellerOrderConfirmation;
 
-
 class CheckoutController extends Controller
 {
-    public function index(){
+    public function __construct(protected OrderService $orderService) {}
 
+    public function index()
+    {
         return view('cart.checkout');
     }
 
@@ -61,8 +58,6 @@ class CheckoutController extends Controller
             'billing_email.email' => 'Email je neispravan.',
             'order_comments.max' => 'Napomena ne smije biti duža od :max znakova.',
             'terms' => 'Pročitajte i prihvatite uvjete korištenja i odredbe kako biste nastavili s narudžbom.'
-           
-            // Other custom messages...
         ]);
 
         if ($validator->fails()) {
@@ -74,99 +69,16 @@ class CheckoutController extends Controller
         // Access the validated data using the validated() method
         $validatedData = $validator->validated();
 
-        // Get cart items
-        $cartItems = CartModel::with('product')->where('session_id', session()->getId())->get();
-
-        // Create a new order
-        $order = Order::create([
-            'order_id' => uniqid(), // Generate a unique order ID
-            'payment_method_id' => $validatedData['metoda_placanja'],
-            'buyer_name' => $validatedData['billing_first_name'],
-            'buyer_lastname' => $validatedData['billing_last_name'],
-            'buyer_company_name' => $validatedData['billing_company'],
-            'buyer_country' => 'HR',
-            'buyer_address' => $validatedData['billing_address_1'],
-            'buyer_apartment_number_or_floor' => $validatedData['billing_address_2'],
-            'buyer_city' => $validatedData['billing_city'],
-            'buyer_county' => $validatedData['billing_state'],
-            'buyer_postal_code' => $validatedData['billing_postcode'],
-            'buyer_phone_number' => $validatedData['billing_phone'],
-            'buyer_email' => $validatedData['billing_email'],
-            'buyer_remarks' => $validatedData['order_comments'],
-            'total_amount' => $cartItems->sum(function ($item) {
-                // Check if the product is on sale
-                if ($item->product->onSale) {
-                    // If on sale, apply the discount to the price
-                    $discountedPrice = $this->calculateDiscountedPrice($item->product->cijena, $item->product->onSale->discount);
-                    return $discountedPrice * $item->quantity;
-                } else {
-                    // If not on sale, use the regular price
-                    return $item->product->cijena * $item->quantity;
-                }
-            }),
-        ]);
-
-        // Get the last inserted order's id
-        $lastOrderId = $order->order_id;
-
-        // Add order items
-        foreach ($cartItems as $cartItem) {
-            $unitPrice = 0;
-           
-            // Check if the product is on sale
-            if ($cartItem->product->onSale) {
-                // If on sale, calculate the unit price with discount
-                $unitPrice = $cartItem->product->cijena - ($cartItem->product->cijena * ($cartItem->product->onSale->discount / 100));
-            } else {
-                // If not on sale, use the regular price
-                $unitPrice = $cartItem->product->cijena;
-            }
-
-            $subtotal = $unitPrice * $cartItem->quantity;
-            
-            $orderItem = new OrderItem([
-                'order_id' => $lastOrderId,
-                'product_id' => $cartItem['product_id'],
-                'quantity' => $cartItem['quantity'],
-                'unit_price' => (float)sprintf("%.2f", $unitPrice),
-                'subtotal' => (float)sprintf("%.2f", $subtotal),
-            ]);
-            $order->items()->save($orderItem);
-        }
+        $order = $this->orderService->createOrder($validatedData);
 
         $request->session()->regenerate();
 
-        // Send email to buyer and seller
-        Mail::to($order->buyer_email)->send(new BuyerOrderConfirmation($order));
-        Mail::to("toni.technoprom@gmail.com")->send(new SellerOrderConfirmation($order));
-
-        // Redirect to the order received page with order details
         return redirect()->route('order.received', ['order_id' => $order->order_id]);
     }
 
-    // Add other methods as needed
     public function orderReceived($order_id)
     {
-
         $order = Order::where('order_id', $order_id)->with('items.product')->firstOrFail();
-
-        // Send email to buyer and seller
-        if (!$order->email_sent) {
-            Mail::to($order->buyer_email)->send(new BuyerOrderConfirmation($order));
-            Mail::to("toni.technoprom@gmail.com")->send(new SellerOrderConfirmation($order));
-
-            // Update the email_sent flag
-            $order->update(['email_sent' => true]);
-        }
         return view('cart.order-received', compact('order'));
-    }
-
-    private function calculateDiscountedPrice($originalPrice, $discountPercentage)
-    {
-        // Calculate the discounted price based on the discount percentage
-        $discount = $originalPrice * ($discountPercentage / 100);
-        $discountedPrice = $originalPrice - $discount;
-
-        return $discountedPrice;
     }
 }

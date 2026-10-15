@@ -4,9 +4,12 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Cart as CartModel;
+use App\Http\Livewire\Traits\CalculatesCart;
 
 class Cart extends Component
 {
+    use CalculatesCart;
+
     public $cartCount = 0;
     public $cartTotal = 0;
     public $cartItems;
@@ -15,28 +18,17 @@ class Cart extends Component
 
     public function render()
     {
-        // Fetch cart items and calculate total price
         return view('livewire.cart');
     }
 
     public function updateCart()
     {
         try {
-            $this->cartItems = CartModel::with('product')->where('session_id', session()->getId())->get();
-            $this->cartCount = $this->cartItems->sum('quantity');
-            $this->cartTotal = $this->cartItems->sum(function ($item) {
-                // Check if the product is on sale
-                if ($item->product->onSale) {
-                    // If on sale, apply the discount to the price
-                    $discountedPrice = $this->calculateDiscountedPrice($item->product->cijena, $item->product->onSale->discount);
-                    return $discountedPrice * $item->quantity;
-                } else {
-                    // If not on sale, use the regular price
-                    return $item->product->cijena * $item->quantity;
-                }
-            });
+            $data = $this->getCartData();
+            $this->cartItems = $data['cartItems'];
+            $this->cartCount = $data['cartCount'];
+            $this->cartTotal = $data['cartTotal'];
         } catch (\Exception $e) {
-            // Handle the exception (e.g., log it, show an error message)
             redirect(500);
         }
     }
@@ -46,19 +38,9 @@ class Cart extends Component
         $this->updateCart();
     }
 
-    // Add a refresh method
     public function refreshCart()
     {
         $this->updateCart();
-    }
-
-    private function calculateDiscountedPrice($originalPrice, $discountPercentage)
-    {
-        // Calculate the discounted price based on the discount percentage
-        $discount = $originalPrice * ($discountPercentage / 100);
-        $discountedPrice = $originalPrice - $discount;
-
-        return $discountedPrice;
     }
 
     public function removeProductFromCart($productId)
@@ -67,11 +49,9 @@ class Cart extends Component
             CartModel::where('session_id', session()->getId())
                 ->where('product_id', $productId)
                 ->delete();
-            // $this->emit('productRemovedFromCart');
-            // $this->updateCart(); // Assuming you have an updateCart method to refresh the cart details
+            
             $this->emit('productCartUpdated');
         } catch (\Exception $e) {
-            // Handle the exception (e.g., log it, show an error message)
             $this->addError('quantity', 'Failed to remove the product from the cart.');
         }
     }
@@ -79,7 +59,7 @@ class Cart extends Component
     public function incrementCartProductQuantity($productId)
     {
         try {
-            $maxQuantity = 10; // Replace with the maximum quantity allowed
+            $maxQuantity = 10;
             CartModel::where('session_id', session()->getId())
                 ->where('product_id', $productId)
                 ->where('quantity', '<', $maxQuantity)
@@ -87,7 +67,6 @@ class Cart extends Component
 
             $this->emit('productCartUpdated');
         } catch (\Exception $e) {
-            // Handle the exception (e.g., log it, show an error message)
             $this->addError('quantity', 'Failed to increment product quantity in the cart.');
         }
     }
@@ -103,9 +82,7 @@ class Cart extends Component
 
             $this->emit('productCartUpdated');
         } catch (\Exception $e) {
-            // Handle the exception (e.g., log it, show an error message)
-            $this->addError('quantity', 'Failed to increment product quantity in the cart.');
+            $this->addError('quantity', 'Failed to decrement product quantity in the cart.');
         }
     }
 }
-
