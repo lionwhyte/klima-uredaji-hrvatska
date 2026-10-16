@@ -31,19 +31,20 @@ Funkcionalna webshop aplikacija izgrađena korištenjem **Laravel**, **Livewire*
 
 Slijedite ove korake kako biste pokrenuli projekt lokalno na svom računalu:
 
-1. Klonirajte repozitorij:
+### 1. Klonirajte repozitorij:
     git clone [https://github.com/lionwhyte/klima-uredaji-hrvatska.git](https://github.com/lionwhyte/klima-uredaji-hrvatska.git)
     cd klima-uredaji-hrvatska
 
-2. Instalirajte PHP i Node ovisnosti:
+### 2. Instalirajte PHP i Node ovisnosti:
     composer install
     npm install
 
-3. Konfigurirajte okruženje:
-    # Kopirajte .env.example datoteku u .env i generirajte ključ aplikacije
+### 3. Konfigurirajte okruženje:
+    Kopirajte .env.example datoteku u .env i generirajte ključ aplikacije:
     cp .env.example .env
     php artisan key:generate
-    # Uredite podatke za spajanje na bazu podataka u vašoj .env datoteci
+    
+    Uredite podatke za spajanje na bazu podataka u vašoj .env datoteci:
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
     DB_PORT=3306
@@ -51,13 +52,13 @@ Slijedite ove korake kako biste pokrenuli projekt lokalno na svom računalu:
     DB_USERNAME=root
     DB_PASSWORD=
 
-4. Pokrenite migracije i napunite bazu podacima:
-    # Pokrenite migracije i sve seedere (uključujući proizvode i promo artikle)
+### 4. Pokrenite migracije i napunite bazu podacima:
+    Pokrenite migracije i sve seedere (uključujući proizvode i promo artikle):
     php artisan migrate:fresh --seed
 
-5. Pokrenite poslužitelj:
-    # Pokretanje Vite servera za CSS/JS
+### 5. Pokrenite poslužitelj:
+    Pokretanje Vite servera za CSS/JS:
     npm run dev
 
-    # Pokretanje Laravel servera
+    Pokretanje Laravel servera:
     php artisan serve
