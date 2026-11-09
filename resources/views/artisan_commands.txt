@@ -1,0 +1,13 @@
+php artisan make:model [naziv modela] //kreira novi model
+php artisan make:migration [naziv migracije npr. create_listings_table] //kreira novu migraciju
+php artisan migrate //pokreće sve migracije u migrations folderu odnosno kreira sheme tablica u bazi podataka na osnovu tih migracija
+php artisan db:seed //popunjava podatke definirane u factory datotekama u tablice baze podataka
+php artisan migrate:refresh //ponovno pokreće migracije te resetira i izmjenjuje sadržaj baze podataka
+php artisan migrate:refresh --seed //isto kao gore navdeno samo se uz refresh pokrece novi seed
+php artisan make:factory [naziv] //kreira factory odnosno definira šprancu po kojoj se seeder generirati podatke za odgovarajuću tablicu
+php artisan make:controller [naziv npr. ListingController] //kreira controller
+composer require itsgoingd/clockwork //za instalaciju podrške za clockwork chrome extenziju
+php artisan vendor:publish //sluzi za otvaranje izbornika u nasem slucaju trazimo broj 5 za paginaciju da bi omogucili stiliziranje html elementa za paginaciju zatim se u appServiceProvideru pod boot metodu stavi npr. Paginator::useBootstrapFive() mada pogledaj dokumentaciju za vise detalja
+php artisan storage:link //za povezivanje storega sa public sadrzajem, na taj nacin uplodani slike i fajlovi u storegu su dostupni u public sadrzaju
+php artisan tinker //cmd alat za upravljanje i pregled baze podataka
+php artisan db:seed --class=BestBuyTableSeeder //seeda određenu seed klasu

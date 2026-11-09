@@ -1,0 +1,26 @@
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/regular.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+@import '@fortawesome/fontawesome-free/css/brands.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.translate-0 {
+    @apply translate-x-[-0%];
+ }
+ 
+ .translate-100 {
+    @apply translate-x-[-100%];
+ }
+ 
+ .translate-200 {
+    @apply translate-x-[-200%];
+ }
+ 
+ .translate-300 {
+    @apply translate-x-[-300%];
+ }
+
